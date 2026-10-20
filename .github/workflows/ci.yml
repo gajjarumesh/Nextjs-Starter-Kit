@@ -21,7 +21,7 @@ jobs:
       CRON_SECRET: ci-cron-secret
       AI_DEFAULT_PROVIDER: mock
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: actions/setup-node@v4
         with: { node-version: 22, cache: npm }
       - run: npm ci
