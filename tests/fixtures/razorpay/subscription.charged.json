@@ -1,0 +1,38 @@
+{
+  "entity": "event",
+  "account_id": "acc_Test",
+  "event": "subscription.charged",
+  "contains": ["subscription", "payment"],
+  "created_at": 1760000100,
+  "payload": {
+    "subscription": {
+      "entity": {
+        "id": "sub_RzpTest1",
+        "entity": "subscription",
+        "plan_id": "plan_pro_month",
+        "customer_id": "cust_RzpAcme",
+        "status": "active",
+        "quantity": 1,
+        "current_start": 1760000000,
+        "current_end": 1762592000,
+        "start_at": 1760000000,
+        "charge_at": 1762592000,
+        "ended_at": null,
+        "notes": { "orgId": "__ORG_ID__", "planId": "pro", "interval": "month" }
+      }
+    },
+    "payment": {
+      "entity": {
+        "id": "pay_RzpTest1",
+        "entity": "payment",
+        "amount": 149900,
+        "currency": "INR",
+        "status": "captured",
+        "invoice_id": "inv_RzpTest1",
+        "customer_id": "cust_RzpAcme",
+        "created_at": 1760000090,
+        "notes": []
+      }
+    }
+  }
+}

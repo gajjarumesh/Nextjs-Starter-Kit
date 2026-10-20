@@ -1,0 +1,25 @@
+{
+  "entity": "event",
+  "account_id": "acc_Test",
+  "event": "subscription.activated",
+  "contains": ["subscription"],
+  "created_at": 1760000000,
+  "payload": {
+    "subscription": {
+      "entity": {
+        "id": "sub_RzpTest1",
+        "entity": "subscription",
+        "plan_id": "plan_pro_month",
+        "customer_id": "cust_RzpAcme",
+        "status": "active",
+        "quantity": 1,
+        "current_start": 1760000000,
+        "current_end": 1762592000,
+        "start_at": 1760000000,
+        "charge_at": 1762592000,
+        "ended_at": null,
+        "notes": { "orgId": "__ORG_ID__", "planId": "pro", "interval": "month" }
+      }
+    }
+  }
+}

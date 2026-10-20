@@ -1,0 +1,22 @@
+{
+  "entity": "event",
+  "account_id": "acc_Test",
+  "event": "payment.failed",
+  "contains": ["payment"],
+  "created_at": 1762592100,
+  "payload": {
+    "payment": {
+      "entity": {
+        "id": "pay_RzpFailed1",
+        "entity": "payment",
+        "amount": 149900,
+        "currency": "INR",
+        "status": "failed",
+        "invoice_id": "inv_RzpFailed1",
+        "customer_id": "cust_RzpAcme",
+        "created_at": 1762592090,
+        "notes": { "orgId": "__ORG_ID__" }
+      }
+    }
+  }
+}

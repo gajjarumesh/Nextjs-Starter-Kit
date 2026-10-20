@@ -1,0 +1,24 @@
+{
+  "id": "evt_1InvoiceFailed",
+  "object": "event",
+  "type": "invoice.payment_failed",
+  "created": 1763888000,
+  "livemode": false,
+  "data": {
+    "object": {
+      "id": "in_1Failed",
+      "object": "invoice",
+      "customer": "cus_TestAcme",
+      "amount_paid": 0,
+      "amount_due": 1900,
+      "currency": "usd",
+      "hosted_invoice_url": "https://invoice.stripe.com/i/failed",
+      "invoice_pdf": null,
+      "status_transitions": { "paid_at": null },
+      "parent": {
+        "type": "subscription_details",
+        "subscription_details": { "subscription": "sub_1TestPro" }
+      }
+    }
+  }
+}

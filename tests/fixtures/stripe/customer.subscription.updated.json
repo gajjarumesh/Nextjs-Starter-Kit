@@ -1,0 +1,31 @@
+{
+  "id": "evt_1SubUpdated",
+  "object": "event",
+  "type": "customer.subscription.updated",
+  "created": 1761209700,
+  "livemode": false,
+  "data": {
+    "object": {
+      "id": "sub_1TestPro",
+      "object": "subscription",
+      "customer": "cus_TestAcme",
+      "status": "active",
+      "trial_end": 1761209600,
+      "cancel_at_period_end": false,
+      "canceled_at": null,
+      "metadata": { "orgId": "__ORG_ID__", "planId": "business", "interval": "year" },
+      "items": {
+        "object": "list",
+        "data": [
+          {
+            "id": "si_1",
+            "quantity": 1,
+            "current_period_start": 1761209600,
+            "current_period_end": 1792745600,
+            "price": { "id": "price_biz_year", "recurring": { "interval": "year" } }
+          }
+        ]
+      }
+    }
+  }
+}

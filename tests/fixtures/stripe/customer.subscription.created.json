@@ -1,0 +1,31 @@
+{
+  "id": "evt_1SubCreated",
+  "object": "event",
+  "type": "customer.subscription.created",
+  "created": 1760000000,
+  "livemode": false,
+  "data": {
+    "object": {
+      "id": "sub_1TestPro",
+      "object": "subscription",
+      "customer": "cus_TestAcme",
+      "status": "trialing",
+      "trial_end": 1761209600,
+      "cancel_at_period_end": false,
+      "canceled_at": null,
+      "metadata": { "orgId": "__ORG_ID__", "planId": "pro", "interval": "month" },
+      "items": {
+        "object": "list",
+        "data": [
+          {
+            "id": "si_1",
+            "quantity": 1,
+            "current_period_start": 1760000000,
+            "current_period_end": 1761209600,
+            "price": { "id": "price_pro_month", "recurring": { "interval": "month" } }
+          }
+        ]
+      }
+    }
+  }
+}
