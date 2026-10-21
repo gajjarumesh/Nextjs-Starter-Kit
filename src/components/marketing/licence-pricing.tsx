@@ -1,7 +1,7 @@
 import { Check, ShieldCheck } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { LICENCES, buyHref } from "@/config/site";
+import { LICENCES } from "@/config/site";
 import { cn } from "@/lib/utils";
 
 /** What the buyer pays for LaunchKit itself. Shown before the customer-facing example plans. */
@@ -37,11 +37,18 @@ export function LicencePricing() {
                 </li>
               ))}
             </ul>
-            <Button asChild className="mt-8 w-full" variant={t.highlighted ? "default" : "outline"}>
-              <a href={buyHref(t)} data-tier={t.id}>
-                Buy {t.name} · ${t.price}
-              </a>
-            </Button>
+            {/* Hidden (with a build-time warning) until the tier's checkout URL is configured. */}
+            {t.checkoutUrl ? (
+              <Button
+                asChild
+                className="mt-8 w-full"
+                variant={t.highlighted ? "default" : "outline"}
+              >
+                <a href={t.checkoutUrl} data-tier={t.id}>
+                  Buy {t.name} · ${t.price}
+                </a>
+              </Button>
+            ) : null}
           </div>
         ))}
       </div>

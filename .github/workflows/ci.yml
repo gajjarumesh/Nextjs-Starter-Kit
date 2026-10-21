@@ -20,6 +20,11 @@ jobs:
       AUTH_SECRET: ci-secret-ci-secret-ci-secret-ci-secret
       CRON_SECRET: ci-cron-secret
       AI_DEFAULT_PROVIDER: mock
+      # Public marketing values used by the build and the e2e sales-page checks.
+      NEXT_PUBLIC_CONTACT_EMAIL: ci@launchkit.test
+      NEXT_PUBLIC_CHECKOUT_SOLO_URL: https://checkout.launchkit.test/solo
+      NEXT_PUBLIC_CHECKOUT_TEAM_URL: https://checkout.launchkit.test/team
+      NEXT_PUBLIC_CHECKOUT_AGENCY_URL: https://checkout.launchkit.test/agency
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4

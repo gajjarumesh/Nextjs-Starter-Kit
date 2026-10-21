@@ -2,6 +2,17 @@ import type { NextConfig } from "next";
 
 const isDev = process.env.NODE_ENV !== "production";
 
+// Build-time warnings for marketing-site values that hide parts of the page when unset.
+const MARKETING_ENV: Record<string, string> = {
+  NEXT_PUBLIC_CHECKOUT_SOLO_URL: "the Solo Buy button is hidden",
+  NEXT_PUBLIC_CHECKOUT_TEAM_URL: "the Team Buy button is hidden",
+  NEXT_PUBLIC_CHECKOUT_AGENCY_URL: "the Agency Buy button is hidden",
+  NEXT_PUBLIC_CONTACT_EMAIL: "the Email us / Support links are hidden",
+};
+for (const [key, effect] of Object.entries(MARKETING_ENV)) {
+  if (!process.env[key]) console.warn(`⚠ ${key} is not set: ${effect}.`);
+}
+
 // Razorpay Checkout runs as a script + iframe; Stripe Checkout is a hosted redirect.
 const csp = [
   "default-src 'self'",

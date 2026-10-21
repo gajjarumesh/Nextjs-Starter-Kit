@@ -1,8 +1,10 @@
 import Link from "next/link";
 import { Logo } from "@/components/logo";
-import { siteConfig } from "@/config/site";
+import { contactMailto, siteConfig } from "@/config/site";
 
 export function MarketingFooter() {
+  const emailUs = contactMailto("LaunchKit question");
+  const support = contactMailto("LaunchKit support");
   return (
     <footer className="border-t">
       <div className="container-page text-muted-foreground flex flex-col gap-6 py-10 text-sm md:flex-row md:items-center md:justify-between">
@@ -23,18 +25,16 @@ export function MarketingFooter() {
           <Link href="/#faq" className="hover:text-foreground">
             FAQ
           </Link>
-          <a href={`mailto:${siteConfig.contactEmail}`} className="hover:text-foreground">
-            Email us
-          </a>
-          <a
-            href={`mailto:${siteConfig.contactEmail}?subject=${encodeURIComponent("LaunchKit support")}`}
-            className="hover:text-foreground"
-          >
-            Support
-          </a>
-          <Link href="/sign-up" className="hover:text-foreground">
-            Get started (app)
-          </Link>
+          {emailUs ? (
+            <a href={emailUs} className="hover:text-foreground">
+              Email us
+            </a>
+          ) : null}
+          {support ? (
+            <a href={support} className="hover:text-foreground">
+              Support
+            </a>
+          ) : null}
           <span>
             © {new Date().getFullYear()} {siteConfig.name}
           </span>

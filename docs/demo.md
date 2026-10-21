@@ -42,12 +42,14 @@ API key. **Globex Demo** (`/globex-demo`) exists so the tour can prove isolation
 
 ## Sales page configuration
 
-Public values, set in the hosting environment:
+Public values, set in the hosting environment and validated in `src/lib/env.ts`. `NEXT_PUBLIC_*`
+values are inlined at build time, so redeploy after changing them.
 
-| Variable                                       | Purpose                                                                             |
-| ---------------------------------------------- | ----------------------------------------------------------------------------------- |
-| `NEXT_PUBLIC_CONTACT_EMAIL`                    | "Email us", "Support" and the final call to action                                  |
-| `NEXT_PUBLIC_BUY_URL_SOLO`, `_TEAM`, `_AGENCY` | Gumroad / Lemon Squeezy checkout links. Until set, Buy buttons open an email order. |
+| Variable                                                    | Purpose                                                                         | When unset                                             |
+| ----------------------------------------------------------- | ------------------------------------------------------------------------------- | ------------------------------------------------------ |
+| `NEXT_PUBLIC_CONTACT_EMAIL`                                 | "Email us", "Support" and the final call to action (`siteConfig.contactEmail`)  | Email links are hidden; build warns                    |
+| `NEXT_PUBLIC_CHECKOUT_SOLO_URL`, `_TEAM_URL`, `_AGENCY_URL` | Gumroad / Lemon Squeezy checkout links (`siteConfig.checkout`)                  | That tier's Buy button is hidden; build warns          |
+| `NEXT_PUBLIC_DEMO_VIDEO_URL`                                | Demo video (e.g. `/media/launchkit-tour.mp4`); captions from the sibling `.vtt` | The section reads "Take the guided tour" with no video |
 
 ## Assets
 

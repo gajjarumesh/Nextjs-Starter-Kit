@@ -2,24 +2,37 @@
  * Sales-page configuration. NEXT_PUBLIC_* values are public by design (checkout links and a
  * contact address); set them in the hosting provider's environment.
  */
-const contactEmail = process.env.NEXT_PUBLIC_CONTACT_EMAIL || "hello@example.com";
+const contactEmail = process.env.NEXT_PUBLIC_CONTACT_EMAIL || null;
 
 export const siteConfig = {
   name: "LaunchKit",
   tagline: "Next.js source code. Pay once, own it.",
   description:
     "A production-ready Next.js SaaS starter with multi-tenant RBAC, Stripe and Razorpay billing behind one interface, and a metered AI layer. Clean TypeScript, tested tenant isolation, no vendor lock-in.",
+  /** The one contact address used everywhere (NEXT_PUBLIC_CONTACT_EMAIL). Email links are hidden when unset. */
   contactEmail,
-  contactConfigured: Boolean(process.env.NEXT_PUBLIC_CONTACT_EMAIL),
-  supportEmail: contactEmail,
-  securityEmail: contactEmail,
-  demoVideo: {
-    src: "/media/launchkit-tour.mp4",
-    captions: "/media/launchkit-tour.vtt",
-    poster: "/screenshots/dashboard-light.jpg",
+  /** Licence checkout links (Gumroad / Lemon Squeezy). A tier's Buy button is hidden when its URL is unset. */
+  checkout: {
+    solo: process.env.NEXT_PUBLIC_CHECKOUT_SOLO_URL || null,
+    team: process.env.NEXT_PUBLIC_CHECKOUT_TEAM_URL || null,
+    agency: process.env.NEXT_PUBLIC_CHECKOUT_AGENCY_URL || null,
   },
+  /** Optional demo video (NEXT_PUBLIC_DEMO_VIDEO_URL). Captions are read from the sibling .vtt file. */
+  demoVideoUrl: process.env.NEXT_PUBLIC_DEMO_VIDEO_URL || null,
+  demoVideoPoster: "/screenshots/dashboard-light.jpg",
   links: { docs: "/#repo" },
 } as const;
+
+/** mailto: link to the contact address, or null when no address is configured. */
+export function contactMailto(subject?: string) {
+  if (!siteConfig.contactEmail) return null;
+  return `mailto:${siteConfig.contactEmail}${subject ? `?subject=${encodeURIComponent(subject)}` : ""}`;
+}
+
+/** Captions track next to the video (same path, .vtt extension). */
+export function demoVideoCaptions(url: string) {
+  return url.replace(/\.[a-z0-9]+(\?.*)?$/i, ".vtt");
+}
 
 export type LicenceTier = {
   id: "solo" | "team" | "agency";
@@ -28,7 +41,7 @@ export type LicenceTier = {
   scope: string;
   support: string;
   includes: string[];
-  buyUrl: string | null;
+  checkoutUrl: string | null;
   highlighted?: boolean;
 };
 
@@ -44,7 +57,7 @@ export const LICENCES: LicenceTier[] = [
       "Unlimited end products",
       "Docs, seed data and tests",
     ],
-    buyUrl: process.env.NEXT_PUBLIC_BUY_URL_SOLO || null,
+    checkoutUrl: siteConfig.checkout.solo,
   },
   {
     id: "team",
@@ -53,7 +66,7 @@ export const LICENCES: LicenceTier[] = [
     scope: "Up to 5 developers in one company",
     support: "12 months of updates · email support within 2 business days",
     includes: ["Everything in Solo", "Up to 5 developers", "Email support"],
-    buyUrl: process.env.NEXT_PUBLIC_BUY_URL_TEAM || null,
+    checkoutUrl: siteConfig.checkout.team,
     highlighted: true,
   },
   {
@@ -63,14 +76,6 @@ export const LICENCES: LicenceTier[] = [
     scope: "Unlimited developers in one company",
     support: "Updates for all v1.x · priority email support",
     includes: ["Everything in Team", "Unlimited developers and client builds", "Priority support"],
-    buyUrl: process.env.NEXT_PUBLIC_BUY_URL_AGENCY || null,
+    checkoutUrl: siteConfig.checkout.agency,
   },
 ];
-
-/** Checkout link for a tier; falls back to an email order until a checkout URL is configured. */
-export function buyHref(tier: LicenceTier) {
-  return (
-    tier.buyUrl ??
-    `mailto:${contactEmail}?subject=${encodeURIComponent(`Buy LaunchKit ${tier.name} licence`)}`
-  );
-}

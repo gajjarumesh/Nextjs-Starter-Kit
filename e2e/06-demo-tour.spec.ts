@@ -11,7 +11,35 @@ test("sales page: Buy above the fold, licence pricing before example plans", asy
     "/demo",
   );
   await expect(page.locator("#buy").getByRole("heading", { name: "Solo" })).toBeVisible();
-  await expect(page.locator("#buy").getByRole("link", { name: /Buy Team · \$99/ })).toBeVisible();
+  // Buy buttons are real checkout links (values from the build env; see .github/workflows/ci.yml).
+  for (const [tier, env] of [
+    ["Solo · $49", "NEXT_PUBLIC_CHECKOUT_SOLO_URL"],
+    ["Team · $99", "NEXT_PUBLIC_CHECKOUT_TEAM_URL"],
+    ["Agency · $149", "NEXT_PUBLIC_CHECKOUT_AGENCY_URL"],
+  ] as const) {
+    const link = page.locator("#buy").getByRole("link", { name: `Buy ${tier}` });
+    if (process.env[env]) {
+      await expect(link).toHaveAttribute("href", process.env[env]!);
+      await expect(link).not.toHaveAttribute("target", /.+/);
+    } else {
+      await expect(link).toHaveCount(0); // hidden instead of a dead button
+    }
+  }
+  const contact = process.env.NEXT_PUBLIC_CONTACT_EMAIL;
+  if (contact) {
+    await expect(page.locator("#faq").getByRole("link", { name: "Email us" })).toHaveAttribute(
+      "href",
+      `mailto:${contact}?subject=LaunchKit%20question`,
+    );
+    await expect(
+      page.getByRole("contentinfo").getByRole("link", { name: "Support" }),
+    ).toHaveAttribute("href", `mailto:${contact}?subject=LaunchKit%20support`);
+    await expect(page.getByRole("link", { name: contact })).toHaveAttribute("href", /^mailto:/);
+  }
+  await expect(
+    page.getByRole("contentinfo").getByRole("link", { name: /Get started/ }),
+  ).toHaveCount(0);
+  await expect(page.getByAltText("LaunchKit dashboard in dark mode")).toHaveCount(1);
   const order = await page.evaluate(() => {
     const buy = document.getElementById("buy")!.getBoundingClientRect().top;
     const plans = document.getElementById("example-plans")!.getBoundingClientRect().top;

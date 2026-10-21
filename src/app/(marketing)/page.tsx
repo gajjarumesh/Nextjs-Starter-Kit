@@ -24,7 +24,7 @@ import { ScreenshotGallery } from "@/components/marketing/screenshot-gallery";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { PROOFS } from "@/config/proofs";
-import { siteConfig } from "@/config/site";
+import { contactMailto, demoVideoCaptions, siteConfig } from "@/config/site";
 
 export const metadata: Metadata = {
   title: { absolute: "LaunchKit — Next.js SaaS starter. Pay once, own the source." },
@@ -176,6 +176,8 @@ const FAQ = [
 ];
 
 export default function LandingPage() {
+  const demoVideoUrl = siteConfig.demoVideoUrl;
+  const emailUs = contactMailto("LaunchKit question");
   return (
     <>
       {/* 1. Hero */}
@@ -224,7 +226,7 @@ export default function LandingPage() {
             {/* eslint-disable-next-line @next/next/no-img-element -- static screenshot */}
             <img
               src="/screenshots/dashboard-dark.jpg"
-              alt=""
+              alt="LaunchKit dashboard in dark mode"
               width={1440}
               height={900}
               className="hidden h-auto w-full dark:block"
@@ -237,35 +239,41 @@ export default function LandingPage() {
       <section id="video" className="bg-muted/30 border-y">
         <div className="container-page grid items-center gap-10 py-20 lg:grid-cols-[1fr_1.4fr]">
           <div className="space-y-4">
-            <p className="text-primary text-sm font-semibold">The demo in about 3 minutes</p>
+            {/* Never promise a video that isn't there. */}
+            <p className="text-primary text-sm font-semibold">
+              {demoVideoUrl ? "The demo in about 3 minutes" : "Take the guided tour"}
+            </p>
             <h2 className="text-3xl font-bold tracking-tight">Seven proofs, one walkthrough</h2>
             <p className="text-muted-foreground">
               Dashboard, metered AI, invitations and roles, a role switch, the isolation check,
               billing and the audit log. Captioned, so it works without sound.
             </p>
-            <Button asChild variant="outline">
-              <Link href="/demo">
-                Walk it yourself <ArrowRight />
-              </Link>
-            </Button>
+            {demoVideoUrl ? null : <WalkItYourself />}
           </div>
-          <video
-            controls
-            muted
-            playsInline
-            preload="metadata"
-            poster={siteConfig.demoVideo.poster}
-            className="w-full rounded-xl border bg-black shadow-xl"
-          >
-            <source src={siteConfig.demoVideo.src} type="video/mp4" />
-            <track
-              kind="captions"
-              src={siteConfig.demoVideo.captions}
-              srcLang="en"
-              label="English"
-              default
-            />
-          </video>
+          {demoVideoUrl ? (
+            <div className="space-y-4">
+              <div className="aspect-video w-full overflow-hidden rounded-xl border bg-black shadow-xl">
+                <video
+                  controls
+                  muted
+                  playsInline
+                  preload="none"
+                  poster={siteConfig.demoVideoPoster}
+                  className="h-full w-full"
+                >
+                  <source src={demoVideoUrl} />
+                  <track
+                    kind="captions"
+                    src={demoVideoCaptions(demoVideoUrl)}
+                    srcLang="en"
+                    label="English"
+                    default
+                  />
+                </video>
+              </div>
+              <WalkItYourself />
+            </div>
+          ) : null}
         </div>
       </section>
 
@@ -459,9 +467,13 @@ export default function LandingPage() {
           <h2 className="text-3xl font-bold tracking-tight">Questions</h2>
           <p className="text-muted-foreground mt-3">
             Something else?{" "}
-            <a className="text-primary hover:underline" href={`mailto:${siteConfig.contactEmail}`}>
-              Email us
-            </a>
+            {emailUs ? (
+              <a className="text-primary hover:underline" href={emailUs}>
+                Email us
+              </a>
+            ) : (
+              "Email us"
+            )}
             .
           </p>
         </div>
@@ -510,18 +522,27 @@ export default function LandingPage() {
               </Link>
             </Button>
           </div>
-          <p className="text-primary-foreground/80 relative mt-6 text-sm">
-            Questions before buying?{" "}
-            <a
-              href={`mailto:${siteConfig.contactEmail}`}
-              className="font-medium underline underline-offset-4"
-            >
-              {siteConfig.contactEmail}
-            </a>
-          </p>
+          {emailUs ? (
+            <p className="text-primary-foreground/80 relative mt-6 text-sm">
+              Questions before buying?{" "}
+              <a href={emailUs} className="font-medium underline underline-offset-4">
+                {siteConfig.contactEmail}
+              </a>
+            </p>
+          ) : null}
         </div>
       </section>
     </>
+  );
+}
+
+function WalkItYourself() {
+  return (
+    <Button asChild variant="outline">
+      <Link href="/demo">
+        Walk it yourself <ArrowRight />
+      </Link>
+    </Button>
   );
 }
 
