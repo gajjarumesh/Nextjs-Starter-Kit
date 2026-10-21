@@ -1,54 +1,21 @@
 import { expect, test } from "@playwright/test";
-import { asNewClient } from "./helpers";
+import { asNewClient, signIn } from "./helpers";
 
-test("sales page: Buy above the fold, licence pricing before example plans", async ({ page }) => {
+test("no public site: / goes to sign-in, then straight to the dashboard", async ({ page }) => {
+  await asNewClient(page);
   await page.goto("/");
-  const header = page.getByRole("banner");
-  await expect(header.getByRole("link", { name: /Buy LaunchKit/ })).toBeVisible();
-  await expect(header.getByRole("link", { name: "Live demo" })).toHaveAttribute("href", "/demo");
-  await expect(page.getByRole("link", { name: /Try the live demo/ })).toHaveAttribute(
+  await expect(page).toHaveURL(/\/sign-in$/);
+  await expect(page.getByRole("link", { name: "Create an account" })).toHaveAttribute(
     "href",
-    "/demo",
+    /\/sign-up/,
   );
-  await expect(page.locator("#buy").getByRole("heading", { name: "Solo" })).toBeVisible();
-  // Buy buttons are real checkout links (values from the build env; see .github/workflows/ci.yml).
-  for (const [tier, env] of [
-    ["Solo · $49", "NEXT_PUBLIC_CHECKOUT_SOLO_URL"],
-    ["Team · $99", "NEXT_PUBLIC_CHECKOUT_TEAM_URL"],
-    ["Agency · $149", "NEXT_PUBLIC_CHECKOUT_AGENCY_URL"],
-  ] as const) {
-    const link = page.locator("#buy").getByRole("link", { name: `Buy ${tier}` });
-    if (process.env[env]) {
-      await expect(link).toHaveAttribute("href", process.env[env]!);
-      await expect(link).not.toHaveAttribute("target", /.+/);
-    } else {
-      await expect(link).toHaveCount(0); // hidden instead of a dead button
-    }
-  }
-  const contact = process.env.NEXT_PUBLIC_CONTACT_EMAIL;
-  if (contact) {
-    await expect(page.locator("#faq").getByRole("link", { name: "Email us" })).toHaveAttribute(
-      "href",
-      `mailto:${contact}?subject=LaunchKit%20question`,
-    );
-    await expect(
-      page.getByRole("contentinfo").getByRole("link", { name: "Support" }),
-    ).toHaveAttribute("href", `mailto:${contact}?subject=LaunchKit%20support`);
-    await expect(page.getByRole("link", { name: contact })).toHaveAttribute("href", /^mailto:/);
-  }
-  await expect(
-    page.getByRole("contentinfo").getByRole("link", { name: /Get started/ }),
-  ).toHaveCount(0);
-  await expect(page.getByAltText("LaunchKit dashboard in dark mode")).toHaveCount(1);
-  const order = await page.evaluate(() => {
-    const buy = document.getElementById("buy")!.getBoundingClientRect().top;
-    const plans = document.getElementById("example-plans")!.getBoundingClientRect().top;
-    return buy < plans;
-  });
-  expect(order).toBe(true);
-  await expect(
-    page.getByRole("heading", { name: "Example plans your customers will see" }),
-  ).toBeVisible();
+  // The old public pages are gone; any unknown path ends at sign-in too.
+  await page.goto("/pricing");
+  await expect(page).toHaveURL(/\/sign-in/);
+  await signIn(page, "owner@demo.test");
+  await expect(page).toHaveURL(/\/[a-z0-9-]+\/dashboard$/);
+  await page.goto("/");
+  await expect(page).toHaveURL(/\/dashboard/);
 });
 
 test("demo: role picker, 7-step tour, role switch, isolation, summary", async ({ page }) => {
@@ -107,7 +74,7 @@ test("demo: role picker, 7-step tour, role switch, isolation, summary", async ({
   // Summary card
   await tour.getByRole("button", { name: "Finish" }).click();
   await expect(tour.getByText("That's the tour")).toBeVisible();
-  await expect(tour.getByRole("link", { name: /Buy LaunchKit/ })).toHaveAttribute("href", "/#buy");
+  await expect(tour.getByRole("link", { name: /Buy LaunchKit/ })).toHaveCount(0);
 });
 
 test("feature cards deep-link into a tour step", async ({ page }) => {

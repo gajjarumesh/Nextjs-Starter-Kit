@@ -10,7 +10,6 @@ import {
   Compass,
   Lock,
   ShieldCheck,
-  ShoppingCart,
   X,
 } from "lucide-react";
 import Link from "next/link";
@@ -319,17 +318,7 @@ function Summary({ onRestart }: { onRestart: () => void }) {
         ))}
       </ol>
       <div className="flex flex-col gap-2">
-        <Button asChild>
-          <Link href="/#buy">
-            <ShoppingCart /> Buy LaunchKit
-          </Link>
-        </Button>
-        <Button asChild variant="outline">
-          <Link href="/#repo">
-            <Code2 /> See the code for this
-          </Link>
-        </Button>
-        <Button variant="ghost" size="sm" onClick={onRestart}>
+        <Button variant="outline" size="sm" onClick={onRestart}>
           Restart the tour
         </Button>
       </div>

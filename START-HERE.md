@@ -60,7 +60,9 @@ npm run seed
 npm run dev
 ```
 
-Open **http://localhost:3000**. Sign in with any demo account, password **`password123`**:
+Open **http://localhost:3000**. There is no public website: it opens the sign-in page (with a link
+to create an account), and signing in takes you straight to your dashboard. Sign in with any demo
+account, password **`password123`**:
 
 | Email                  | Role                                                   |
 | ---------------------- | ------------------------------------------------------ |
@@ -86,15 +88,14 @@ npm run typecheck
 
 ## 3. Make it yours
 
-| What                                               | Where                                                                                    |
-| -------------------------------------------------- | ---------------------------------------------------------------------------------------- |
-| Product name, contact email, checkout links        | `src/config/site.ts` and `.env` (`NEXT_PUBLIC_*`)                                        |
-| Colours and theme (light + dark)                   | the tokens at the top of `src/app/globals.css`                                           |
-| Logo                                               | `src/components/logo.tsx`, `src/app/icon.svg`                                            |
-| Your customers' plans, prices, seats and AI quotas | `src/config/plans.ts`                                                                    |
-| The landing page                                   | `src/app/(marketing)/page.tsx` — it is LaunchKit's own sales page; replace it with yours |
-| Roles and permissions                              | `src/server/rbac/permissions.ts`                                                         |
-| Add an AI feature                                  | a prompt in `src/server/ai/prompts/`, then call `runAi` (see `src/actions/ai.ts`)        |
+| What                                               | Where                                                                             |
+| -------------------------------------------------- | --------------------------------------------------------------------------------- |
+| Product name and description                       | `src/config/site.ts`                                                              |
+| Colours and theme (light + dark)                   | the tokens at the top of `src/app/globals.css`                                    |
+| Logo                                               | `src/components/logo.tsx`, `src/app/icon.svg`                                     |
+| Your customers' plans, prices, seats and AI quotas | `src/config/plans.ts`                                                             |
+| Roles and permissions                              | `src/server/rbac/permissions.ts`                                                  |
+| Add an AI feature                                  | a prompt in `src/server/ai/prompts/`, then call `runAi` (see `src/actions/ai.ts`) |
 
 More recipes: `docs/recipes.md`.
 
@@ -165,16 +166,15 @@ The container runs the migrations, then starts the server. Or run app + database
 
 ## 6. Troubleshooting
 
-| Problem                                                | Fix                                                                                                    |
-| ------------------------------------------------------ | ------------------------------------------------------------------------------------------------------ |
-| `Invalid environment variables` on start               | The message lists each missing or invalid variable. `AUTH_SECRET` needs 32+ characters.                |
-| `Can't reach database server at localhost:5432`        | Start the database: `docker compose up -d db`. Check `docker ps`.                                      |
-| Port 5432 already in use                               | Another PostgreSQL is running. Stop it, or change the port in `docker-compose.yml` and `DATABASE_URL`. |
-| Prisma client errors after pulling an update           | `npx prisma generate`, then `npx prisma migrate dev`.                                                  |
-| Verification / reset emails never arrive               | Without `RESEND_API_KEY` they are printed in the terminal running `npm run dev`.                       |
-| "Too many attempts" when signing in                    | Auth endpoints allow 5 attempts per minute per IP. Wait a minute.                                      |
-| Checkout says "not configured"                         | Add Stripe or Razorpay test keys and price/plan ids (`docs/billing.md`).                               |
-| Buy buttons or email links missing on the landing page | Set the `NEXT_PUBLIC_*` values in `.env`, then rebuild.                                                |
+| Problem                                         | Fix                                                                                                    |
+| ----------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
+| `Invalid environment variables` on start        | The message lists each missing or invalid variable. `AUTH_SECRET` needs 32+ characters.                |
+| `Can't reach database server at localhost:5432` | Start the database: `docker compose up -d db`. Check `docker ps`.                                      |
+| Port 5432 already in use                        | Another PostgreSQL is running. Stop it, or change the port in `docker-compose.yml` and `DATABASE_URL`. |
+| Prisma client errors after pulling an update    | `npx prisma generate`, then `npx prisma migrate dev`.                                                  |
+| Verification / reset emails never arrive        | Without `RESEND_API_KEY` they are printed in the terminal running `npm run dev`.                       |
+| "Too many attempts" when signing in             | Auth endpoints allow 5 attempts per minute per IP. Wait a minute.                                      |
+| Checkout says "not configured"                  | Add Stripe or Razorpay test keys and price/plan ids (`docs/billing.md`).                               |
 
 ---
 

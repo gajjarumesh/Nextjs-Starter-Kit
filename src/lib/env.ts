@@ -57,18 +57,6 @@ export const envSchema = z.object({
   AI_MODEL_FAST: optional,
   AI_MODEL_SMART: optional,
 
-  // Marketing site (public by design; inlined into the client bundle at build time)
-  NEXT_PUBLIC_CONTACT_EMAIL: optional.pipe(z.string().email().optional()),
-  NEXT_PUBLIC_CHECKOUT_SOLO_URL: optional.pipe(z.string().url().optional()),
-  NEXT_PUBLIC_CHECKOUT_TEAM_URL: optional.pipe(z.string().url().optional()),
-  NEXT_PUBLIC_CHECKOUT_AGENCY_URL: optional.pipe(z.string().url().optional()),
-  NEXT_PUBLIC_DEMO_VIDEO_URL: optional.pipe(
-    z
-      .string()
-      .refine((v) => v.startsWith("/") || /^https?:\/\//.test(v), "Must be a URL or a /path")
-      .optional(),
-  ),
-
   // Rate limiting (optional in development: falls back to in-memory)
   UPSTASH_REDIS_REST_URL: optional,
   UPSTASH_REDIS_REST_TOKEN: optional,

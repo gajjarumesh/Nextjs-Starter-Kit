@@ -1,9 +1,7 @@
 "use client";
 
-import { Clock, ShoppingCart, Sparkles } from "lucide-react";
-import Link from "next/link";
+import { Clock, Sparkles } from "lucide-react";
 import { useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
 import { DEMO_ROLES, type DemoRole } from "@/config/demo";
 import { useDemoRole } from "./use-demo-role";
 
@@ -12,7 +10,7 @@ function remaining(expiresAt: number, now: number) {
   return mins >= 60 ? `${Math.floor(mins / 60)}h ${mins % 60}m` : `${mins}m`;
 }
 
-/** Shown on every page of a demo sandbox: role switcher, reset countdown and a Buy button. */
+/** Shown on every page of a demo sandbox: role switcher, and reset countdown. */
 export function DemoBanner({
   orgSlug,
   role,
@@ -57,11 +55,6 @@ export function DemoBanner({
       <span className="hidden items-center gap-1.5 opacity-90 sm:flex">
         <Clock className="size-3.5" /> Your sandbox resets in {remaining(expiresAt, now)}
       </span>
-      <Button asChild size="sm" variant="secondary" className="h-7">
-        <Link href="/#buy">
-          <ShoppingCart /> Buy LaunchKit
-        </Link>
-      </Button>
     </div>
   );
 }

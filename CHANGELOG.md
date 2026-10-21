@@ -4,10 +4,9 @@
 
 First public release.
 
-- Live demo flow: `/demo` role picker, per-visitor sandboxes, 7-step guided tour, `DEMO_MODE` rules.
-- Sales page with licence pricing, proofs from a real test run, screenshots and a captioned tour video.
-- Marketing values from env: checkout links, contact email, optional demo video (hidden with a
-  build warning when unset).
+- No public site: `/` opens sign-in (or the dashboard when signed in).
+- Optional demo mode: `/demo` role picker, per-visitor sandboxes, 7-step guided tour, `DEMO_MODE`
+  rules (404 while off).
 - Vercel + Neon deployment: migrations run in the build (`scripts/vercel-build.mjs`), daily crons.
 - Audit log date filter.
 

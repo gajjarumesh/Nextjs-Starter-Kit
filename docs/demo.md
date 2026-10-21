@@ -1,7 +1,7 @@
-# Demo flow and sales page
+# Demo mode
 
-The demo is a side path off the sales page: visitors either open it or keep reading, and both
-routes end at licence pricing (`/#buy`).
+An optional public demo of your app: visitors pick a role and get their own throwaway sandbox,
+with no sign-up. It is off by default, and `/demo` returns 404 until you turn it on.
 
 ## Turning it on
 
@@ -29,7 +29,7 @@ API key. **Globex Demo** (`/globex-demo`) exists so the tour can prove isolation
 
 | Rule                                                                      | Where                                                                                   |
 | ------------------------------------------------------------------------- | --------------------------------------------------------------------------------------- |
-| Banner on every sandbox page: role switcher, reset countdown, Buy button  | `components/demo/demo-banner.tsx`                                                       |
+| Banner on every sandbox page: role switcher and reset countdown           | `components/demo/demo-banner.tsx`                                                       |
 | Isolated sandbox per visitor, deleted after 2 hours                       | `server/demo/sandbox.ts`, `/api/cron/demo-cleanup`, plus cleanup on every `/demo` start |
 | Mock AI only                                                              | `server/ai/providers/index.ts`                                                          |
 | 20 AI messages and 10 invitations per sandbox                             | `server/demo/limits.ts`                                                                 |
@@ -39,22 +39,3 @@ API key. **Globex Demo** (`/globex-demo`) exists so the tour can prove isolation
 | Deleting organizations is disabled                                        | `server/demo.ts`                                                                        |
 | Session ends with the sandbox; visitors land back on `/demo`              | `server/demo/session.ts`, org layout                                                    |
 | Test-mode billing; the billing page shows test card numbers               | billing page                                                                            |
-
-## Sales page configuration
-
-Public values, set in the hosting environment and validated in `src/lib/env.ts`. `NEXT_PUBLIC_*`
-values are inlined at build time, so redeploy after changing them.
-
-| Variable                                                    | Purpose                                                                         | When unset                                             |
-| ----------------------------------------------------------- | ------------------------------------------------------------------------------- | ------------------------------------------------------ |
-| `NEXT_PUBLIC_CONTACT_EMAIL`                                 | "Email us", "Support" and the final call to action (`siteConfig.contactEmail`)  | Email links are hidden; build warns                    |
-| `NEXT_PUBLIC_CHECKOUT_SOLO_URL`, `_TEAM_URL`, `_AGENCY_URL` | Gumroad / Lemon Squeezy checkout links (`siteConfig.checkout`)                  | That tier's Buy button is hidden; build warns          |
-| `NEXT_PUBLIC_DEMO_VIDEO_URL`                                | Demo video (e.g. `/media/launchkit-tour.mp4`); captions from the sibling `.vtt` | The section reads "Take the guided tour" with no video |
-
-## Assets
-
-- `node scripts/proofs.mjs` regenerates `src/config/proofs.ts` (test counts, the cross-tenant test
-  output, the billing interface) from a real test run.
-- `node scripts/capture-assets.mjs` re-captures `public/screenshots/*` (6 screens, light and
-  dark) and the captioned tour video `public/media/launchkit-tour.{mp4,vtt}` from a running
-  server with `DEMO_MODE=true` and seed data. Needs `ffmpeg` on the PATH for the video.

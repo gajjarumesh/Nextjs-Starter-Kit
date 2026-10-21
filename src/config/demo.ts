@@ -1,6 +1,6 @@
 /**
- * Demo flow configuration (client-safe). The demo is a side path off the sales page:
- * /demo -> role picker -> sandbox copy of "Acme Demo" -> 7-step guided tour -> Buy.
+ * Demo flow configuration (client-safe), active only with DEMO_MODE=true:
+ * /demo -> role picker -> sandbox copy of "Acme Demo" -> 7-step guided tour -> sign up.
  */
 export const DEMO = {
   emailDomain: "demo.launchkit",
@@ -50,7 +50,7 @@ export type TourStep = {
   /** Minimum role the step needs; the panel offers to switch back when the visitor lacks it. */
   needs?: "OWNER" | "ADMIN" | "MEMBER";
   widget?: "role-switch" | "isolation";
-  /** "See the code for this" anchor on the sales page. */
+  /** Where the step is implemented. */
   code: string;
 };
 

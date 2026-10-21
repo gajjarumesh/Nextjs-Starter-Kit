@@ -59,7 +59,7 @@ subscription state. See [`docs/`](docs) for details.
 
 ```
 src/
-├─ app/            (marketing) (auth) (app)/[orgSlug] (admin)/admin api/
+├─ app/            (auth) (app)/[orgSlug] (admin)/admin api/
 ├─ actions/        server actions: validate with Zod, call requireOrgAccess, call services
 ├─ components/     ui/ (shadcn-style), layout/, billing/, ai/, members/, settings/, admin/
 ├─ config/         plans.ts, site.ts
@@ -80,6 +80,6 @@ e2e/               Playwright journeys
 - [Public API reference](docs/api.md)
 - [Deployment](docs/deployment.md)
 - [Customisation recipes](docs/recipes.md)
-- [Demo flow and sales page](docs/demo.md)
+- [Demo mode](docs/demo.md)
 
 Security reports: see [SECURITY.md](SECURITY.md).

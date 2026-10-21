@@ -1,6 +1,7 @@
-import { Clock, ShieldCheck, ShoppingCart, Sparkles } from "lucide-react";
+import { Clock, LogIn, ShieldCheck, Sparkles } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
+import { notFound } from "next/navigation";
 import { RolePicker } from "@/components/demo/role-picker";
 import { Logo } from "@/components/logo";
 import { ThemeToggle } from "@/components/theme-toggle";
@@ -17,6 +18,7 @@ export default async function DemoPage({
 }: {
   searchParams: Promise<{ start?: string; expired?: string }>;
 }) {
+  if (!env.DEMO_MODE) notFound();
   const { start, expired } = await searchParams;
   return (
     <div className="min-h-dvh">
@@ -26,8 +28,8 @@ export default async function DemoPage({
           <div className="flex items-center gap-2">
             <ThemeToggle />
             <Button asChild size="sm">
-              <Link href="/#buy">
-                <ShoppingCart /> Buy LaunchKit
+              <Link href="/sign-in">
+                <LogIn /> Sign in
               </Link>
             </Button>
           </div>
@@ -56,18 +58,7 @@ export default async function DemoPage({
               </AlertDescription>
             </Alert>
           ) : null}
-          {env.DEMO_MODE ? (
-            <RolePicker start={start} />
-          ) : (
-            <Alert variant="warning">
-              <AlertTitle>The demo is off on this deployment</AlertTitle>
-              <AlertDescription>
-                <p>
-                  Set <code className="font-mono">DEMO_MODE=true</code> to enable it.
-                </p>
-              </AlertDescription>
-            </Alert>
-          )}
+          <RolePicker start={start} />
         </div>
         <aside className="bg-card space-y-4 rounded-2xl border p-6">
           <h2 className="font-semibold">The guided tour</h2>
