@@ -7,6 +7,8 @@ behind one interface, and a metered AI layer. Clean TypeScript, tested tenant is
 components · PostgreSQL + Prisma · Better Auth · Stripe · Razorpay · Vercel AI SDK (Anthropic, OpenAI,
 mock) · Resend + React Email · Zod · Vitest · Playwright.
 
+**New here? Open [START-HERE.md](START-HERE.md)** for the step-by-step install and deploy guide.
+
 ## Run it locally (about 15 minutes)
 
 Prerequisites: Node 22+, Docker.
