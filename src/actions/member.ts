@@ -19,7 +19,11 @@ export async function inviteMember(orgSlug: string, input: unknown) {
     const data = inviteMemberSchema.parse(input);
     const { invitation } = await invitationService.create(ctx, data);
     revalidatePath(`/${orgSlug}/members`);
-    return { id: invitation.id };
+    // Demo sandboxes capture the email: return a preview link instead of sending it.
+    const previewUrl = ctx.org.demoExpiresAt
+      ? `/${orgSlug}/members/invitations/${invitation.id}/preview`
+      : null;
+    return { id: invitation.id, previewUrl };
   });
 }
 

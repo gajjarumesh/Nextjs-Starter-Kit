@@ -9,10 +9,20 @@ import { tenantDb } from "@/server/db/tenant";
 import { sendEmail } from "@/server/email/send";
 import { emails } from "@/server/email/templates";
 import { ROLE_LABELS, grantableRoles } from "@/server/rbac/permissions";
+import { assertDemoInviteAllowance, isSandbox } from "@/server/demo/limits";
 import { AUDIT_ACTIONS, auditService } from "./audit";
 import { billingService } from "./billing";
 
 export const INVITATION_TTL_DAYS = 7;
+
+export function invitationEmail(ctx: Pick<OrgContext, "org" | "user">, role: Role, url: string) {
+  return emails.invitation({
+    orgName: ctx.org.name,
+    inviterName: ctx.user.name,
+    role: ROLE_LABELS[role],
+    url,
+  });
+}
 
 /**
  * Allow-listed for the global client only for token lookup (the token identifies the
@@ -35,6 +45,7 @@ export const invitationService = {
     if (pending) throw new AppError("CONFLICT", 409, "That email has already been invited.");
 
     await billingService.assertWithinLimit(ctx, "seats");
+    await assertDemoInviteAllowance(ctx.db, ctx.org);
 
     const token = randomToken(32);
     const invitation = await ctx.db.invitation.create({
@@ -55,15 +66,13 @@ export const invitationService = {
       targetId: invitation.id,
       metadata: { role: input.role },
     });
-    await sendEmail(
-      input.email,
-      emails.invitation({
-        orgName: ctx.org.name,
-        inviterName: ctx.user.name,
-        role: ROLE_LABELS[input.role],
-        url: absoluteUrl(`/accept-invite/${token}`),
-      }),
-    );
+    // Demo sandboxes capture the email instead of sending it (shown via "Email preview").
+    if (!isSandbox(ctx.org)) {
+      await sendEmail(
+        input.email,
+        invitationEmail(ctx, input.role, absoluteUrl(`/accept-invite/${token}`)),
+      );
+    }
     return { invitation, token };
   },
 

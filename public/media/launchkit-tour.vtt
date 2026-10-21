@@ -1,0 +1,50 @@
+WEBVTT
+
+1
+00:00:00.880 --> 00:00:05.015
+LaunchKit: Next.js SaaS source code. Pay once, own it.
+
+2
+00:00:05.015 --> 00:00:10.517
+The live demo: pick a role. No sign-up, no email.
+
+3
+00:00:10.517 --> 00:00:17.627
+1/7 Dashboard: a real multi-tenant app with plan, AI usage and recent activity.
+
+4
+00:00:17.627 --> 00:00:28.361
+2/7 Metered AI: a streaming chat. Every message is counted against the plan quota.
+
+5
+00:00:28.361 --> 00:00:36.694
+3/7 Invitations and roles. In the demo, emails are captured instead of sent.
+
+6
+00:00:36.745 --> 00:00:45.780
+4/7 Switch to Viewer: the Invite button disappears, and the server refuses too.
+
+7
+00:00:45.829 --> 00:00:49.875
+5/7 Tenant isolation: try to open another customer's organization.
+
+8
+00:00:49.875 --> 00:00:55.912
+5/7 It returns 404. Outsiders cannot even confirm the organization exists.
+
+9
+00:00:55.912 --> 00:01:01.447
+6/7 Billing needs the Owner role, so switch back.
+
+10
+00:01:01.451 --> 00:01:07.997
+6/7 Stripe and Razorpay behind one interface. Test mode only.
+
+11
+00:01:07.997 --> 00:01:15.555
+7/7 Audit log, filtered to today: every action from the tour is recorded.
+
+12
+00:01:15.555 --> 00:01:20.560
+That's the tour. Buy LaunchKit once and own the code.
+

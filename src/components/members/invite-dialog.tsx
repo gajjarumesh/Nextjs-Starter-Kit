@@ -3,6 +3,7 @@
 import type { Role } from "@prisma/client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { UserPlus } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Controller, useForm, useWatch } from "react-hook-form";
 import { toast } from "sonner";
@@ -33,6 +34,7 @@ export function InviteDialog({
   actorRole: Role;
   disabledReason?: string;
 }) {
+  const router = useRouter();
   const [open, setOpen] = useState(false);
   const { run, error, setError } = useAction(inviteMember);
   const form = useForm<InviteMemberInput>({
@@ -62,7 +64,16 @@ export function InviteDialog({
           onSubmit={form.handleSubmit(async (values) => {
             const res = await run(orgSlug, values);
             if (res.ok) {
-              toast.success(`Invitation sent to ${values.email}`);
+              const previewUrl = res.data.previewUrl;
+              if (previewUrl) {
+                toast.success(`Invitation for ${values.email} captured (demo)`, {
+                  description: "Demo emails are not sent.",
+                  action: { label: "Email preview", onClick: () => router.push(previewUrl) },
+                });
+              } else {
+                toast.success(`Invitation sent to ${values.email}`);
+              }
+              router.refresh();
               setOpen(false);
               form.reset();
             }

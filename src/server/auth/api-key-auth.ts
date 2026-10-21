@@ -26,7 +26,14 @@ export async function authenticateApiKey(
     where: { keyHash: sha256(raw) },
     include: {
       organization: {
-        select: { id: true, name: true, slug: true, planOverride: true, deletedAt: true },
+        select: {
+          id: true,
+          name: true,
+          slug: true,
+          planOverride: true,
+          deletedAt: true,
+          demoExpiresAt: true,
+        },
       },
     },
   });
@@ -39,11 +46,20 @@ export async function authenticateApiKey(
     throw new AppError("UNAUTHENTICATED", 401, "Missing, invalid or revoked API key.");
   }
 
+  // Keys created in a demo sandbox never work outside the demo.
+  if (key.organization.demoExpiresAt) {
+    throw new AppError(
+      "FORBIDDEN",
+      403,
+      "API keys created in the demo do not work. Buy LaunchKit to run your own API.",
+    );
+  }
+
   // Update lastUsedAt at most once a minute per key.
   if (!key.lastUsedAt || now.getTime() - key.lastUsedAt.getTime() > LAST_USED_THROTTLE_MS) {
     await rawDb.apiKey.update({ where: { id: key.id }, data: { lastUsedAt: now } });
   }
 
-  const { deletedAt: _deleted, ...org } = key.organization;
+  const { deletedAt: _deleted, demoExpiresAt: _demo, ...org } = key.organization;
   return { apiKeyId: key.id, org, db: tenantDb(org.id) };
 }

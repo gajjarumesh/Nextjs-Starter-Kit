@@ -4,14 +4,13 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { PricingTable } from "./pricing-table";
 
+/** The demo app's own plans, i.e. what a buyer's customers would see. Not LaunchKit's price. */
 export function PublicPricing() {
   return (
     <PricingTable
-      renderAction={(planId) => (
-        <Button asChild className="w-full" variant={planId === "pro" ? "default" : "outline"}>
-          <Link href={`/sign-up?plan=${planId}`}>
-            {planId === "free" ? "Start for free" : "Start free trial"}
-          </Link>
+      renderAction={() => (
+        <Button asChild className="w-full" variant="outline">
+          <Link href="/demo?start=billing">See this in the demo</Link>
         </Button>
       )}
     />

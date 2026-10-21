@@ -1,5 +1,7 @@
 import "server-only";
 import { betterAuth } from "better-auth";
+import { APIError, createAuthMiddleware, getSessionFromCtx } from "better-auth/api";
+import { isDemoEmail } from "@/config/demo";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { nextCookies } from "better-auth/next-js";
 import { env, features } from "@/lib/env";
@@ -8,6 +10,13 @@ import { sendEmail } from "@/server/email/send";
 import { emails } from "@/server/email/templates";
 
 const DAY = 60 * 60 * 24;
+const DEMO_LOCKED_PATHS = new Set([
+  "/change-password",
+  "/change-email",
+  "/delete-user",
+  "/update-user",
+  "/set-password",
+]);
 
 /**
  * Better Auth is wrapped here so buyers can swap the auth library: the rest of the app
@@ -84,6 +93,17 @@ export const auth = betterAuth({
       "/forget-password": { window: 60, max: 5 },
       "/reset-password": { window: 60, max: 5 },
     },
+  },
+
+  hooks: {
+    // Demo users cannot change their password, email or profile, or delete themselves.
+    before: createAuthMiddleware(async (ctx) => {
+      if (!DEMO_LOCKED_PATHS.has(ctx.path)) return;
+      const session = await getSessionFromCtx(ctx);
+      if (session && isDemoEmail(session.user.email)) {
+        throw new APIError("FORBIDDEN", { message: "This is disabled in the demo." });
+      }
+    }),
   },
 
   plugins: [nextCookies()],

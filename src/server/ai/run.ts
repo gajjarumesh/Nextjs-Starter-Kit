@@ -5,6 +5,7 @@ import { rateLimit } from "@/lib/rate-limit";
 import type { TenantDb } from "@/server/db/tenant";
 import { getAiProvider, modelFor } from "./providers";
 import type { AiMessage, AiResult, AiTier } from "./providers/types";
+import { assertDemoAiAllowance } from "@/server/demo/limits";
 import { assertAiQuota } from "./quota";
 
 export const MAX_TOKENS_CAP = 4096;
@@ -14,7 +15,7 @@ export const AI_RATE_LIMIT = { limit: 20, windowSec: 60 };
 /** Works for both UI sessions (userId) and API keys (apiKeyId). */
 export type AiContext = {
   db: TenantDb;
-  org: { id: string; planOverride: string | null };
+  org: { id: string; planOverride: string | null; demoExpiresAt?: Date | null; createdAt?: Date };
   userId: string | null;
   rateKey: string;
 };
@@ -32,6 +33,7 @@ async function prepare(ctx: AiContext, input: AiInput) {
     (input.system?.length ?? 0) + input.messages.reduce((n, m) => n + m.content.length, 0);
   if (chars > MAX_INPUT_CHARS) throw new AppError("VALIDATION_ERROR", 422, "Input is too long.");
   await assertAiQuota(ctx); // throws QUOTA_EXCEEDED
+  await assertDemoAiAllowance(ctx.db, ctx.org); // demo sandboxes: 20 messages
   await rateLimit(`ai:${ctx.rateKey}`, AI_RATE_LIMIT); // throws RATE_LIMITED
   const provider = getAiProvider(); // from env; "mock" in demo mode
   return {

@@ -117,6 +117,8 @@ model Organization {
   logo             String?
   /// Super-admin manual plan override; takes precedence over the subscription.
   planOverride     String?
+  /// Set on demo sandboxes (DEMO_MODE); expired sandboxes are deleted by the cleanup cron.
+  demoExpiresAt    DateTime?
   deletedAt        DateTime?
   createdAt        DateTime         @default(now())
   updatedAt        DateTime         @updatedAt
@@ -128,6 +130,8 @@ model Organization {
   apiKeys          ApiKey[]
   aiUsage          AiUsageEvent[]
   auditLogs        AuditLog[]
+
+  @@index([demoExpiresAt])
 }
 
 model Membership {

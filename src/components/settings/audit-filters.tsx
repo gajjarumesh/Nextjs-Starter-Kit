@@ -32,6 +32,18 @@ export function AuditFilters({ actors }: { actors: { id: string; name: string }[
           ))}
         </NativeSelect>
       </div>
+      <div className="w-36">
+        <NativeSelect
+          aria-label="Filter by date"
+          value={params.get("since") ?? ""}
+          onChange={(e) => set("since", e.target.value)}
+        >
+          <option value="">All time</option>
+          <option value="today">Today</option>
+          <option value="7d">Last 7 days</option>
+          <option value="30d">Last 30 days</option>
+        </NativeSelect>
+      </div>
       <div className="w-52">
         <NativeSelect
           aria-label="Filter by actor"

@@ -78,5 +78,6 @@ e2e/               Playwright journeys
 - [Public API reference](docs/api.md)
 - [Deployment](docs/deployment.md)
 - [Customisation recipes](docs/recipes.md)
+- [Demo flow and sales page](docs/demo.md)
 
 Security reports: see [SECURITY.md](SECURITY.md).

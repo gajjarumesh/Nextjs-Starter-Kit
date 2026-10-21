@@ -1,4 +1,8 @@
-import type { ReactNode } from "react";
+import { redirect } from "next/navigation";
+import { Suspense, type ReactNode } from "react";
+import { DemoBanner } from "@/components/demo/demo-banner";
+import { TourPanel } from "@/components/demo/tour-panel";
+import { isSandboxExpired } from "@/server/demo/limits";
 import { UsageMeter } from "@/components/billing/usage-meter";
 import { ImpersonationBanner } from "@/components/layout/impersonation-banner";
 import { OrgSwitcher } from "@/components/layout/org-switcher";
@@ -28,6 +32,9 @@ export default async function OrgLayout({
   const { orgSlug } = await params;
   const access = await orgPage(orgSlug, "resource:read");
   const ctx = isForbidden(access) ? access.ctx : access;
+  const demoExpiresAt = ctx.org.demoExpiresAt;
+  // Demo sandboxes last 2 hours; afterwards the visitor starts a fresh one.
+  if (isSandboxExpired(ctx.org)) redirect("/demo?expired=1");
 
   const [orgs, ent, usage] = await Promise.all([
     organizationService.listForUser(ctx.user.id),
@@ -41,6 +48,9 @@ export default async function OrgLayout({
 
   return (
     <div className="flex min-h-dvh flex-col">
+      {demoExpiresAt ? (
+        <DemoBanner orgSlug={orgSlug} role={ctx.role} expiresAt={demoExpiresAt.getTime()} />
+      ) : null}
       {ctx.impersonator && ctx.impersonationExpiresAt ? (
         <ImpersonationBanner email={ctx.user.email} expiresAt={ctx.impersonationExpiresAt} />
       ) : null}
@@ -85,7 +95,9 @@ export default async function OrgLayout({
               </div>
             </div>
           </header>
-          <main className="mx-auto w-full max-w-6xl flex-1 space-y-6 px-4 py-8 lg:px-8">
+          <main
+            className={`mx-auto w-full max-w-6xl flex-1 space-y-6 px-4 py-8 lg:px-8 ${demoExpiresAt ? "pb-80 sm:pb-8" : ""}`}
+          >
             {!ctx.user.emailVerified ? (
               <Alert variant="info">
                 <AlertDescription className="text-foreground flex flex-wrap items-center justify-between gap-3">
@@ -98,6 +110,11 @@ export default async function OrgLayout({
           </main>
         </div>
       </div>
+      {demoExpiresAt ? (
+        <Suspense>
+          <TourPanel orgSlug={orgSlug} role={ctx.role} />
+        </Suspense>
+      ) : null}
     </div>
   );
 }

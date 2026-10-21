@@ -1,6 +1,7 @@
 import "server-only";
 import { render } from "@react-email/components";
 import { Resend } from "resend";
+import { isDemoEmail } from "@/config/demo";
 import { env, features } from "@/lib/env";
 import { logger, maskEmail } from "@/lib/logger";
 import type { EmailMessage } from "./templates";
@@ -9,6 +10,7 @@ let resend: Resend | null = null;
 
 /** Sends through Resend when RESEND_API_KEY is set; otherwise logs the email (development). */
 export async function sendEmail(to: string, message: EmailMessage): Promise<void> {
+  if (isDemoEmail(to)) return; // demo users are not real mailboxes
   if (!features.email) {
     const text = await render(message.react, { plainText: true });
     // Dev mode: print so links (verify, reset, invite) can be clicked from the terminal.

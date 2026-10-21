@@ -86,6 +86,19 @@ export default async function BillingPage({
           </AlertDescription>
         </Alert>
       ) : null}
+      {ctx.org.demoExpiresAt ? (
+        <Alert variant="info">
+          <AlertTitle>Demo: test mode only</AlertTitle>
+          <AlertDescription>
+            <p>
+              Stripe test card <code className="font-mono">4242 4242 4242 4242</code>, any future
+              date, any CVC. Razorpay test card{" "}
+              <code className="font-mono">4111 1111 1111 1111</code> or UPI{" "}
+              <code className="font-mono">success@razorpay</code>. No money moves.
+            </p>
+          </AlertDescription>
+        </Alert>
+      ) : null}
       {providers.length === 0 ? (
         <Alert variant="info">
           <AlertTitle>No payment provider configured</AlertTitle>

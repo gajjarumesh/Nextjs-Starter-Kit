@@ -40,6 +40,7 @@ export default defineConfig({
     env: {
       APP_URL: `http://localhost:${PORT}`,
       AI_DEFAULT_PROVIDER: "mock",
+      DEMO_MODE: "true",
       MOCK_AI_DELAY_MS: "5",
       RAZORPAY_KEY_ID: "rzp_test_e2e",
       RAZORPAY_KEY_SECRET: "rzp_test_e2e_secret",

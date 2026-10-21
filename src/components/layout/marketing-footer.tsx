@@ -14,15 +14,27 @@ export function MarketingFooter() {
           </p>
         </div>
         <nav className="flex flex-wrap gap-6">
-          <Link href="/pricing" className="hover:text-foreground">
+          <Link href="/demo" className="hover:text-foreground">
+            Live demo
+          </Link>
+          <Link href="/#buy" className="hover:text-foreground">
             Pricing
           </Link>
           <Link href="/#faq" className="hover:text-foreground">
             FAQ
           </Link>
-          <a href={`mailto:${siteConfig.supportEmail}`} className="hover:text-foreground">
+          <a href={`mailto:${siteConfig.contactEmail}`} className="hover:text-foreground">
+            Email us
+          </a>
+          <a
+            href={`mailto:${siteConfig.contactEmail}?subject=${encodeURIComponent("LaunchKit support")}`}
+            className="hover:text-foreground"
+          >
             Support
           </a>
+          <Link href="/sign-up" className="hover:text-foreground">
+            Get started (app)
+          </Link>
           <span>
             © {new Date().getFullYear()} {siteConfig.name}
           </span>

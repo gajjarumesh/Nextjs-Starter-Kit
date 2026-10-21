@@ -24,12 +24,21 @@ import { memberService } from "@/server/services/member";
 
 export const metadata: Metadata = { title: "Audit log" };
 
+function sinceDate(since?: string): Date | undefined {
+  const now = new Date();
+  if (since === "today")
+    return new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
+  if (since === "7d") return new Date(now.getTime() - 7 * 86_400_000);
+  if (since === "30d") return new Date(now.getTime() - 30 * 86_400_000);
+  return undefined;
+}
+
 export default async function AuditLogPage({
   params,
   searchParams,
 }: {
   params: Promise<{ orgSlug: string }>;
-  searchParams: Promise<{ action?: string; actor?: string; cursor?: string }>;
+  searchParams: Promise<{ action?: string; actor?: string; cursor?: string; since?: string }>;
 }) {
   const { orgSlug } = await params;
   const sp = await searchParams;
@@ -43,6 +52,7 @@ export default async function AuditLogPage({
       action: sp.action || undefined,
       actorId: sp.actor || undefined,
       cursor: sp.cursor,
+      since: sinceDate(sp.since),
     }),
     memberService.list(ctx.db),
   ]);
@@ -53,6 +63,7 @@ export default async function AuditLogPage({
   const nextParams = new URLSearchParams({
     ...(sp.action ? { action: sp.action } : {}),
     ...(sp.actor ? { actor: sp.actor } : {}),
+    ...(sp.since ? { since: sp.since } : {}),
     ...(nextCursor ? { cursor: nextCursor } : {}),
   });
 
@@ -121,7 +132,7 @@ export default async function AuditLogPage({
         {sp.cursor ? (
           <Button asChild variant="outline" size="sm">
             <Link
-              href={`/${orgSlug}/settings/audit-log?${new URLSearchParams({ ...(sp.action ? { action: sp.action } : {}), ...(sp.actor ? { actor: sp.actor } : {}) })}`}
+              href={`/${orgSlug}/settings/audit-log?${new URLSearchParams({ ...(sp.action ? { action: sp.action } : {}), ...(sp.actor ? { actor: sp.actor } : {}), ...(sp.since ? { since: sp.since } : {}) })}`}
             >
               Newest
             </Link>
