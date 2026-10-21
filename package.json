@@ -22,7 +22,8 @@
     "db:studio": "prisma studio",
     "seed": "tsx prisma/seed.ts",
     "postinstall": "prisma generate",
-    "prepare": "husky || true"
+    "prepare": "husky || true",
+    "vercel-build": "node scripts/vercel-build.mjs"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"

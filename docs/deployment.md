@@ -19,3 +19,11 @@ Configure cron calls to `/api/cron/*` with `CRON_SECRET`, and point provider web
 
 Behind a proxy, make sure it sets `X-Forwarded-For`: the auth rate limits (5/minute for sign-in,
 sign-up and reset) are keyed by client IP.
+
+## Vercel + Neon
+
+- `DATABASE_URL`: Neon **pooled** URL with `&pgbouncer=true` (used at runtime).
+- `DIRECT_DATABASE_URL`: Neon **direct** URL (used by `prisma migrate deploy` during the build).
+- The `vercel-build` script (`scripts/vercel-build.mjs`) applies migrations, then runs `next build`.
+- `vercel.json` schedules the two cron routes daily (Hobby plan limit); Vercel sends
+  `Authorization: Bearer $CRON_SECRET` automatically when `CRON_SECRET` is set.
