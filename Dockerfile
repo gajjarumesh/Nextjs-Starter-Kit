@@ -2,9 +2,10 @@
 FROM node:22-alpine AS deps
 WORKDIR /app
 RUN apk add --no-cache openssl
-COPY package.json package-lock.json ./
+# The lockfile is optional: use it when present for reproducible installs.
+COPY package*.json ./
 COPY prisma ./prisma
-RUN npm ci
+RUN if [ -f package-lock.json ]; then npm ci; else npm install; fi
 
 FROM node:22-alpine AS build
 WORKDIR /app

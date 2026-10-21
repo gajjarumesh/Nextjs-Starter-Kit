@@ -28,8 +28,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
-        with: { node-version: 22, cache: npm }
-      - run: npm ci
+        with: { node-version: 22, cache: npm, cache-dependency-path: package.json }
+      # Works with or without a committed package-lock.json.
+      - run: if [ -f package-lock.json ]; then npm ci; else npm install; fi
       - run: npx prisma migrate deploy
       - run: npm run lint
       - run: npm run typecheck
